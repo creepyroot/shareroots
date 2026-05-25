@@ -1,0 +1,6 @@
+{
+  "name": "SHAREROOTS",
+  "description": "Unlimited, encrypted, peer-to-peer file sharing directly between browsers with no backend servers.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
