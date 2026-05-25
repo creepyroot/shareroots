@@ -16,7 +16,7 @@ export default function Receiver({ onBack, transferManager, initialCode }: Recei
 
   useEffect(() => {
     if (initialCode) {
-       transferManager.connectToPeer(initialCode);
+       transferManager.connectToRoot(initialCode);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialCode]);
@@ -24,7 +24,7 @@ export default function Receiver({ onBack, transferManager, initialCode }: Recei
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (code.trim().length === 6) {
-      transferManager.connectToPeer(code.toUpperCase());
+      transferManager.connectToRoot(code.toUpperCase());
     }
   };
 
@@ -178,7 +178,7 @@ export default function Receiver({ onBack, transferManager, initialCode }: Recei
             <Download className="w-8 h-8 text-indigo-400" />
           </div>
           
-          <h3 className="text-2xl font-display font-bold text-center text-white mb-2">Connect to Peer</h3>
+          <h3 className="text-2xl font-display font-bold text-center text-white mb-2">Connect to Root</h3>
           <p className="text-slate-400 text-center text-sm mb-8">Enter the 6-character secure code provided by the sender.</p>
           
           <form onSubmit={handleSubmit}>

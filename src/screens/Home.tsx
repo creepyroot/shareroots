@@ -25,7 +25,7 @@ export default function Home({ onSelect }: HomeProps) {
         <p className="text-lg text-slate-400 font-sans max-w-xl mx-auto leading-relaxed">
           Share files securely between devices without size limits. 
           No servers in the middle, purely peer-to-peer over an encrypted 
-          WebRTC connection.
+          secure channel.
         </p>
       </motion.div>
 

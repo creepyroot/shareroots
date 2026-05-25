@@ -27,7 +27,7 @@ const ICE_SERVERS = [
 
 export function useTransfer() {
   const [status, setStatus] = useState<TransferStatus>('idle');
-  const [peerId, setPeerId] = useState<string>('');
+  const [rootId, setRootId] = useState<string>('');
   const [progress, setProgress] = useState<number>(0);
   const [errorMsg, setErrorMsg] = useState<string>('');
   const [metadata, setMetadata] = useState<FileMetadata | null>(null);
@@ -89,7 +89,7 @@ export function useTransfer() {
     peerRef.current = peer;
 
     peer.on('open', (id) => {
-      setPeerId(code);
+      setRootId(code);
       setStatus('waiting_for_peer');
     });
 
@@ -193,10 +193,10 @@ export function useTransfer() {
   }, [cleanup, status]);
 
   // RECEIVER
-  const connectToPeer = useCallback((code: string) => {
+  const connectToRoot = useCallback((code: string) => {
     cleanup();
     setStatus('connecting');
-    setPeerId(code);
+    setRootId(code);
 
     const peer = new Peer({
        debug: 2,
@@ -329,10 +329,10 @@ export function useTransfer() {
   }, [cleanup]);
 
   const resumeDownload = useCallback(() => {
-     if (peerId) {
-        connectToPeer(peerId);
+     if (rootId) {
+        connectToRoot(rootId);
      }
-  }, [peerId, connectToPeer]);
+  }, [rootId, connectToRoot]);
 
   const acceptTransfer = useCallback(async () => {
     if (!metadataRef.current || !connRef.current) return;
@@ -372,14 +372,14 @@ export function useTransfer() {
 
   return {
     status,
-    peerId,
+    rootId,
     progress,
     errorMsg,
     metadata,
     currentIndex,
     totalFiles,
     startHosting,
-    connectToPeer,
+    connectToRoot,
     resumeDownload,
     acceptTransfer,
     cleanup

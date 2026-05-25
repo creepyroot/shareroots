@@ -15,14 +15,14 @@ export default function Sender({ onBack, transferManager }: SenderProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleCopyLink = () => {
-    const url = window.location.origin + '?recv=' + transferManager.peerId;
+    const url = window.location.origin + '?recv=' + transferManager.rootId;
     navigator.clipboard.writeText(url);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
   
   const handleCopyCode = () => {
-    navigator.clipboard.writeText(transferManager.peerId);
+    navigator.clipboard.writeText(transferManager.rootId);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
