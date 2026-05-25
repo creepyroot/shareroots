@@ -31,6 +31,8 @@ export function useTransfer() {
   const [progress, setProgress] = useState<number>(0);
   const [errorMsg, setErrorMsg] = useState<string>('');
   const [metadata, setMetadata] = useState<FileMetadata | null>(null);
+  
+  const metadataRef = useRef<FileMetadata | null>(null);
 
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [totalFiles, setTotalFiles] = useState<number>(0);
@@ -63,6 +65,7 @@ export function useTransfer() {
     setStatus('idle');
     setProgress(0);
     setMetadata(null);
+    metadataRef.current = null;
     setCurrentIndex(0);
     setTotalFiles(0);
   }, []);
@@ -113,6 +116,7 @@ export function useTransfer() {
          const file = filesRef.current[currentFileIdx];
          const md: FileMetadata = { name: file.name, size: file.size, type: file.type };
          setMetadata(md);
+         metadataRef.current = md;
          setCurrentIndex(currentFileIdx);
          connRef.current.send({ type: 'metadata', metadata: md, index: currentFileIdx, total: filesRef.current.length });
       };
@@ -213,7 +217,7 @@ export function useTransfer() {
 
     peer.on('open', () => {
       const fullId = `shareroots-${code.toUpperCase()}`;
-      console.log("Receiver connected to PeerJS server. Connecting to sender:", fullId);
+      console.log("Connected to secure channel. Connecting to sender:", fullId);
       
       const conn = peer.connect(fullId, { reliable: true });
       connRef.current = conn;
@@ -233,6 +237,7 @@ export function useTransfer() {
 
         if (msg.type === 'metadata') {
           setMetadata(msg.metadata);
+          metadataRef.current = msg.metadata;
           setCurrentIndex(msg.index);
           setTotalFiles(msg.total);
           receivedBytesRef.current = 0;
@@ -261,10 +266,10 @@ export function useTransfer() {
         }
 
         if (msg.type === 'file-data') {
-          const buffer = msg.buffer;
+          const buffer = msg.buffer as ArrayBuffer;
           receivedBytesRef.current += buffer.byteLength;
 
-          setProgress(Number(((receivedBytesRef.current / (metadata?.size || 1)) * 100).toFixed(2)));
+          setProgress(Number(((receivedBytesRef.current / (metadataRef.current?.size || 1)) * 100).toFixed(2)));
 
           if (fileStreamRef.current) {
             await fileStreamRef.current.write(buffer);
@@ -279,12 +284,12 @@ export function useTransfer() {
             fileStreamRef.current = null;
           } else {
              // Trigger fallback download
-             const blob = new Blob(chunksCacheRef.current, { type: metadata?.type || 'application/octet-stream' });
+             const blob = new Blob(chunksCacheRef.current, { type: metadataRef.current?.type || 'application/octet-stream' });
              const url = URL.createObjectURL(blob);
              const a = document.createElement('a');
              a.style.display = 'none';
              a.href = url;
-             a.download = metadata?.name || 'downloaded_file';
+             a.download = metadataRef.current?.name || 'downloaded_file';
              document.body.appendChild(a);
              a.click();
              URL.revokeObjectURL(url);
@@ -321,7 +326,7 @@ export function useTransfer() {
       setErrorMsg(err.message);
     });
 
-  }, [cleanup, metadata, status]);
+  }, [cleanup]);
 
   const resumeDownload = useCallback(() => {
      if (peerId) {
@@ -330,7 +335,7 @@ export function useTransfer() {
   }, [peerId, connectToPeer]);
 
   const acceptTransfer = useCallback(async () => {
-    if (!metadata || !connRef.current) return;
+    if (!metadataRef.current || !connRef.current) return;
     
     let targetFileStream = null;
 
@@ -345,11 +350,11 @@ export function useTransfer() {
 
     try {
         if (dirHandleRef.current) {
-            const fileHandle = await dirHandleRef.current.getFileHandle(metadata.name, { create: true });
+            const fileHandle = await dirHandleRef.current.getFileHandle(metadataRef.current.name, { create: true });
             targetFileStream = await fileHandle.createWritable();
         } else if ('showSaveFilePicker' in window && totalFiles === 1) {
             // @ts-ignore
-            const handle = await window.showSaveFilePicker({ suggestedName: metadata.name });
+            const handle = await window.showSaveFilePicker({ suggestedName: metadataRef.current.name });
             targetFileStream = await handle.createWritable();
         }
     } catch (err) {
@@ -363,7 +368,7 @@ export function useTransfer() {
     fileStreamRef.current = targetFileStream;
     setStatus('transferring');
     connRef.current.send({ type: 'accept', startOffset: 0 });
-  }, [metadata, totalFiles]);
+  }, [totalFiles]);
 
   return {
     status,

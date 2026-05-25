@@ -4,6 +4,7 @@ import Home from './screens/Home';
 import Sender from './screens/Sender';
 import Receiver from './screens/Receiver';
 import Intro from './components/Intro';
+import Guide from './screens/Guide';
 import { useTransfer } from './hooks/useTransfer';
 import { AppView } from './types';
 
@@ -36,10 +37,7 @@ export default function App() {
         {/* Navbar Minimal */}
         <nav className="w-full max-w-7xl mx-auto px-6 py-6 flex items-center justify-between z-10 hover:cursor-pointer">
            <div className="flex items-center gap-2" onClick={() => setView('home')} role="button">
-              <div className="w-8 h-8 rounded-lg bg-cyan-500/20 border border-cyan-500/50 flex items-center justify-center">
-                <div className="w-4 h-4 text-cyan-400 rotate-45 border-2 border-current rounded-sm"></div>
-              </div>
-              <span className="font-display font-semibold tracking-wide text-white flex items-center gap-1">SHARE<span className="text-cyan-400">ROOTS</span></span>
+              <span className="font-display font-bold tracking-widest text-white flex items-center gap-1 text-xl">SHARE<span className="text-cyan-400">ROOTS</span></span>
            </div>
         </nav>
 
@@ -48,12 +46,12 @@ export default function App() {
           {view === 'home' && <Home onSelect={setView} />}
           {view === 'send' && <Sender onBack={() => setView('home')} transferManager={transferManager} />}
           {view === 'receive' && <Receiver onBack={() => setView('home')} transferManager={transferManager} initialCode={recvCode} />}
+          {view === 'guide' && <Guide onBack={() => setView('home')} />}
         </div>
         
         {/* Footer minimal */}
         <footer className="py-6 flex flex-col items-center gap-1 text-center font-mono z-10 sticky top-[100vh]">
-           <p className="text-xs text-slate-500">End-to-End Encrypted &bull; No Size Limit &bull; Secure Connection</p>
-           <p className="text-[10px] text-slate-600">A GURNOOR PROJECT</p>
+           <p className="text-[10px] text-slate-600 mt-2 italic max-w-sm">Made by GURNOOR WITH LOVE FOR PEOPLE WITH HUGE FILES TO TRANSFER ACROSS LONG LONG DISTANCE</p>
         </footer>
       </main>
     </>

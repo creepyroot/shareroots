@@ -18,7 +18,7 @@ export default function Home({ onSelect }: HomeProps) {
           <span className="text-sm font-medium text-slate-300">E2E Encrypted P2P Transfer</span>
         </div>
         
-        <h1 className="text-5xl md:text-7xl font-display font-bold tracking-tight text-white mb-6">
+        <h1 className="text-5xl md:text-7xl font-display font-bold tracking-widest text-white mb-6 uppercase">
           SHARE<span className="text-cyan-400">ROOTS</span>
         </h1>
         
