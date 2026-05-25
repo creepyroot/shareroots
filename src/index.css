@@ -8,12 +8,12 @@
 }
 
 @layer base {
-  body {
-    @apply bg-slate-950 text-slate-100 antialiased selection:bg-cyan-500/30 selection:text-cyan-200;
+    body {
+    @apply bg-slate-950 text-slate-100 antialiased selection:bg-red-500/30 selection:text-red-200;
   }
 }
 
 /* Custom glow utility */
-.cyan-glow {
-  box-shadow: 0 0 24px -6px rgba(34, 211, 238, 0.4);
+.red-glow {
+  box-shadow: 0 0 24px -6px rgba(239, 68, 68, 0.4);
 }

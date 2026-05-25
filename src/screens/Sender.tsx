@@ -52,7 +52,7 @@ export default function Sender({ onBack, transferManager }: SenderProps) {
   };
 
   const renderStatus = () => {
-    const { status, progress, peerId, metadata, errorMsg, currentIndex, totalFiles } = transferManager;
+    const { status, progress, rootId, metadata, errorMsg, currentIndex, totalFiles } = transferManager;
     
     if (status === 'error') {
       return (
@@ -66,7 +66,7 @@ export default function Sender({ onBack, transferManager }: SenderProps) {
     if (status === 'generating_id') {
       return (
         <div className="flex flex-col items-center justify-center p-12 text-slate-400">
-          <Loader2 className="w-8 h-8 animate-spin mb-4 text-cyan-500" />
+          <Loader2 className="w-8 h-8 animate-spin mb-4 text-red-500" />
           <p>Generating security credentials...</p>
         </div>
       );
@@ -79,11 +79,11 @@ export default function Sender({ onBack, transferManager }: SenderProps) {
            animate={{ opacity: 1, scale: 1 }}
            className="w-full bg-slate-900/60 border border-slate-800 rounded-2xl p-8 max-w-md shadow-2xl backdrop-blur-md relative overflow-hidden"
          >
-           <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-cyan-500 via-indigo-500 to-cyan-500 opacity-50" />
+           <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-red-500 via-red-500 to-red-500 opacity-50" />
            <h3 className="text-lg font-medium text-slate-200 mb-6 text-center">Share this code with the receiver</h3>
            
            <div className="flex items-center justify-between bg-slate-950 border border-slate-800 rounded-xl p-4 mb-6">
-              <span className="font-mono text-3xl font-bold tracking-[0.2em] text-cyan-400 select-all">{peerId}</span>
+              <span className="font-mono text-3xl font-bold tracking-[0.2em] text-red-400 select-all">{rootId}</span>
               <button 
                 onClick={handleCopyCode}
                 className="p-2 bg-slate-800 hover:bg-slate-700 rounded-lg transition-colors"
